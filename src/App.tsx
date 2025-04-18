@@ -1,38 +1,64 @@
 import React, { useState } from "react";
 import "./App.css";
 
-const cards = ["Card 1", "Card 2", "Card 3", "Card 4"];
+const cards = [
+    "Card 1",
+    "Card 2",
+    "Card 3",
+    "Card 4",
+    "Card 1",
+    "Card 2",
+    "Card 3",
+    "Card 4",
+];
 
 const App = () => {
     const [topIndex, setTopIndex] = useState(0);
-    const [pos, setPos] = useState(0);
+    const [pos, setPos] = useState({ x: 0, y: 0 });
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
+    const [startY, setStartY] = useState(0);
 
     const handleMouseDown = (e: React.MouseEvent) => {
         setIsDragging(true);
         setStartX(e.clientX);
+        setStartY(e.clientY);
+        // setAnimate(false); // disable transition while dragging
+        e.preventDefault();
     };
 
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!isDragging) return;
         const deltaX = e.clientX - startX;
-        setPos(deltaX);
+        const deltaY = e.clientY - startY;
+        setPos({ x: deltaX, y: deltaY });
     };
 
     const handleMouseUp = () => {
         setIsDragging(false);
+        // setAnimate(true); // enable transition
 
-        if (pos > 150 || pos < -150) {
-            console.log(pos > 0 ? "Swiped Right!" : "Swiped Left!");
-            // Animate out and then move to next card
-            setPos(pos > 0 ? 500 : -500);
+        const SWIPE_X = 150;
+        const SWIPE_Y = 200;
+
+        if (pos.x > SWIPE_X || pos.x < -SWIPE_X) {
+            console.log(pos.x > 0 ? "Swiped Right (X)" : "Swiped Left (X)");
+            setPos({ x: pos.x > 0 ? 500 : -500, y: pos.y });
             setTimeout(() => {
                 setTopIndex((prev) => Math.min(prev + 1, cards.length - 1));
-                setPos(0);
+                setPos({ x: 0, y: 0 });
+                // setAnimate(false);
+            }, 300);
+        } else if (pos.y > SWIPE_Y || pos.y < -SWIPE_Y) {
+            console.log(pos.y > 0 ? "Swiped Down (Y)" : "Swiped Up (Y)");
+            setPos({ x: 0, y: pos.y > 0 ? 700 : -700 });
+            setTimeout(() => {
+                setTopIndex((prev) => Math.min(prev + 1, cards.length - 1));
+                setPos({ x: 0, y: 0 });
+                // setAnimate(false);
             }, 300);
         } else {
-            setPos(0); // reset to center
+            setPos({ x: 0, y: 0 }); // Reset position
         }
     };
 
@@ -47,13 +73,15 @@ const App = () => {
                 const isTop = i === 0;
                 return (
                     <div
-                        key={card}
-                        className={`w-[300px] h-[400px] rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold transition-transform duration-300 ease-in-out ${
-                            isTop ? "z-20" : "z-10 scale-[0.95] translate-y-4"
+                        key={topIndex + i} // unique key
+                        className={`w-[300px] h-[400px] rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${
+                            isTop
+                                ? "z-20 transition-transform duration-100 ease-in-out"
+                                : "z-10 scale-[0.95] translate-y-4"
                         }`}
                         style={{
                             transform: isTop
-                                ? `translateX(${pos}px)`
+                                ? `translateX(${pos.x}px) translateY(${pos.y}px)`
                                 : undefined,
                             backgroundColor: `hsl(${
                                 (topIndex + i) * 60
@@ -61,6 +89,7 @@ const App = () => {
                             cursor: isTop ? "grab" : "default",
                         }}
                         onMouseDown={isTop ? handleMouseDown : undefined}
+                        onDragStart={(e) => e.preventDefault()} // no ghost
                     >
                         {card}
                     </div>
