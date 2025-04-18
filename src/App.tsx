@@ -23,7 +23,7 @@ const App = () => {
         setIsDragging(true);
         setStartX(e.clientX);
         setStartY(e.clientY);
-        // setAnimate(false); // disable transition while dragging
+
         e.preventDefault();
     };
 
@@ -36,7 +36,6 @@ const App = () => {
 
     const handleMouseUp = () => {
         setIsDragging(false);
-        // setAnimate(true); // enable transition
 
         const SWIPE_X = 150;
         const SWIPE_Y = 200;
@@ -47,18 +46,16 @@ const App = () => {
             setTimeout(() => {
                 setTopIndex((prev) => Math.min(prev + 1, cards.length - 1));
                 setPos({ x: 0, y: 0 });
-                // setAnimate(false);
             }, 300);
-        } else if (pos.y > SWIPE_Y || pos.y < -SWIPE_Y) {
-            console.log(pos.y > 0 ? "Swiped Down (Y)" : "Swiped Up (Y)");
-            setPos({ x: 0, y: pos.y > 0 ? 700 : -700 });
+        } else if (pos.y < -SWIPE_Y) {
+            console.log("Swiped Up (Y)");
+            setPos({ x: 0, y: -700 });
             setTimeout(() => {
                 setTopIndex((prev) => Math.min(prev + 1, cards.length - 1));
                 setPos({ x: 0, y: 0 });
-                // setAnimate(false);
             }, 300);
         } else {
-            setPos({ x: 0, y: 0 }); // Reset position
+            setPos({ x: 0, y: 0 });
         }
     };
 
@@ -73,7 +70,7 @@ const App = () => {
                 const isTop = i === 0;
                 return (
                     <div
-                        key={topIndex + i} // unique key
+                        key={topIndex + i}
                         className={`w-[300px] h-[400px] rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${
                             isTop
                                 ? "z-20 transition-transform duration-100 ease-in-out"
