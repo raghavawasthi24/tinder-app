@@ -94,14 +94,18 @@ const App = () => {
             onTouchEnd={handleTouchEnd}
         >
             {cards.slice(topIndex).map((card, i) => {
+                // console.log("Rendering card", card);
                 const isTop = i === 0;
+                const isSecond = i === 1;
                 return (
                     <div
                         key={topIndex + i}
-                        className={`w-[300px] h-[400px] rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${
+                        className={`w-full h-full rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${
                             isTop
                                 ? "z-20 transition-transform duration-100 ease-in-out"
-                                : "z-10 scale-[0.95] translate-y-4"
+                                : isSecond
+                                ? "z-15 scale-[0.98]"
+                                : "z-10 scale-[0.95]"
                         }`}
                         style={{
                             transform: isTop

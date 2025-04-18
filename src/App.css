@@ -8,3 +8,10 @@ body {
     background-color: #f0f0f0;
     margin: auto;
 } 
+
+@media screen and (max-width: 520px) {
+    body {
+        width: 100%;
+    }
+    
+}
