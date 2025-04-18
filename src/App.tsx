@@ -19,11 +19,14 @@ const App = () => {
     const [startX, setStartX] = useState(0);
     const [startY, setStartY] = useState(0);
 
+    const SWIPE_X = 150;
+    const SWIPE_Y = 200;
+
+    // Mouse events
     const handleMouseDown = (e: React.MouseEvent) => {
         setIsDragging(true);
         setStartX(e.clientX);
         setStartY(e.clientY);
-
         e.preventDefault();
     };
 
@@ -35,10 +38,32 @@ const App = () => {
     };
 
     const handleMouseUp = () => {
-        setIsDragging(false);
+        handleSwipeEnd();
+    };
 
-        const SWIPE_X = 150;
-        const SWIPE_Y = 200;
+    // Touch events
+    const handleTouchStart = (e: React.TouchEvent) => {
+        setIsDragging(true);
+        const touch = e.touches[0];
+        setStartX(touch.clientX);
+        setStartY(touch.clientY);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - startX;
+        const deltaY = touch.clientY - startY;
+        setPos({ x: deltaX, y: deltaY });
+    };
+
+    const handleTouchEnd = () => {
+        handleSwipeEnd();
+    };
+
+    // Shared logic
+    const handleSwipeEnd = () => {
+        setIsDragging(false);
 
         if (pos.x > SWIPE_X || pos.x < -SWIPE_X) {
             console.log(pos.x > 0 ? "Swiped Right (X)" : "Swiped Left (X)");
@@ -65,6 +90,8 @@ const App = () => {
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
         >
             {cards.slice(topIndex).map((card, i) => {
                 const isTop = i === 0;
@@ -86,7 +113,8 @@ const App = () => {
                             cursor: isTop ? "grab" : "default",
                         }}
                         onMouseDown={isTop ? handleMouseDown : undefined}
-                        onDragStart={(e) => e.preventDefault()} // no ghost
+                        onTouchStart={isTop ? handleTouchStart : undefined}
+                        onDragStart={(e) => e.preventDefault()} // prevent image ghost drag
                     >
                         {card}
                     </div>
