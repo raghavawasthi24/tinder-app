@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
-
-const cards = [
-    "Card 1",
-    "Card 2",
-    "Card 3",
-    "Card 4",
-    "Card 1",
-    "Card 2",
-    "Card 3",
-    "Card 4",
-];
+import { data } from "./constants/data";
+import { Card } from "./components/card";
 
 const App = () => {
     const [topIndex, setTopIndex] = useState(0);
@@ -18,17 +9,13 @@ const App = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [startY, setStartY] = useState(0);
+    const [lastActioned, setLastActioned] = useState<any>("");
+    const [id, setId] = useState<any>(null);
 
     const SWIPE_X = 150;
     const SWIPE_Y = 200;
 
     // Mouse events
-    const handleMouseDown = (e: React.MouseEvent) => {
-        setIsDragging(true);
-        setStartX(e.clientX);
-        setStartY(e.clientY);
-        e.preventDefault();
-    };
 
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!isDragging) return;
@@ -42,12 +29,6 @@ const App = () => {
     };
 
     // Touch events
-    const handleTouchStart = (e: React.TouchEvent) => {
-        setIsDragging(true);
-        const touch = e.touches[0];
-        setStartX(touch.clientX);
-        setStartY(touch.clientY);
-    };
 
     const handleTouchMove = (e: React.TouchEvent) => {
         if (!isDragging) return;
@@ -64,66 +45,68 @@ const App = () => {
     // Shared logic
     const handleSwipeEnd = () => {
         setIsDragging(false);
+        clearTimeout(id);
 
         if (pos.x > SWIPE_X || pos.x < -SWIPE_X) {
-            console.log(pos.x > 0 ? "Swiped Right (X)" : "Swiped Left (X)");
+            console.log(
+                pos.x > 0
+                    ? setLastActioned("Swiped Right")
+                    : setLastActioned("Swiped Left")
+            );
             setPos({ x: pos.x > 0 ? 500 : -500, y: pos.y });
             setTimeout(() => {
-                setTopIndex((prev) => Math.min(prev + 1, cards.length - 1));
+                setTopIndex((prev) => Math.min(prev + 1, data.length - 1));
                 setPos({ x: 0, y: 0 });
             }, 300);
         } else if (pos.y < -SWIPE_Y) {
-            console.log("Swiped Up (Y)");
+            setLastActioned("Swiped Up");
             setPos({ x: 0, y: -700 });
             setTimeout(() => {
-                setTopIndex((prev) => Math.min(prev + 1, cards.length - 1));
+                setTopIndex((prev) => Math.min(prev + 1, data.length - 1));
                 setPos({ x: 0, y: 0 });
             }, 300);
         } else {
             setPos({ x: 0, y: 0 });
         }
+
+        const intervalID = setTimeout(() => {
+            setLastActioned("");
+        }, 2000);
+
+        setId(intervalID);
     };
 
     return (
         <div
-            className="w-full h-screen flex items-center justify-center overflow-hidden relative"
+            className="w-full h-screen flex justify-center overflow-hidden relative"
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
         >
-            {cards.slice(topIndex).map((card, i) => {
+            {data.slice(topIndex).map((card, i) => {
                 // console.log("Rendering card", card);
                 const isTop = i === 0;
                 const isSecond = i === 1;
                 return (
-                    <div
-                        key={topIndex + i}
-                        className={`w-full h-full rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${
-                            isTop
-                                ? "z-20 transition-transform duration-100 ease-in-out"
-                                : isSecond
-                                ? "z-15 scale-[0.98]"
-                                : "z-10 scale-[0.95]"
-                        }`}
-                        style={{
-                            transform: isTop
-                                ? `translateX(${pos.x}px) translateY(${pos.y}px)`
-                                : undefined,
-                            backgroundColor: `hsl(${
-                                (topIndex + i) * 60
-                            }, 70%, 60%)`,
-                            cursor: isTop ? "grab" : "default",
-                        }}
-                        onMouseDown={isTop ? handleMouseDown : undefined}
-                        onTouchStart={isTop ? handleTouchStart : undefined}
-                        onDragStart={(e) => e.preventDefault()} // prevent image ghost drag
-                    >
-                        {card}
-                    </div>
+                    <Card
+                        data={card}
+                        topIndex={topIndex}
+                        isTop={isTop}
+                        isSecond={isSecond}
+                        pos={pos}
+                        setIsDragging={setIsDragging}
+                        setStartX={setStartX}
+                        setStartY={setStartY}
+                        index={i}
+                    />
                 );
             })}
+
+            <div className="absolute bottom-0 z-20 text-black text-2xl">
+                {lastActioned}
+            </div>
         </div>
     );
 };
