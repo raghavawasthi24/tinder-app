@@ -14,8 +14,8 @@ const App = () => {
 
     const cardRef = React.useRef<any>(null);    
 
-    const SWIPE_X = 200;
-    const SWIPE_Y = 400;
+    const SWIPE_X = 150;
+    const SWIPE_Y = 200;
 
     // Mouse events
 
@@ -53,8 +53,8 @@ const App = () => {
             cardRef.current.style.transition = "transform 0.8s ease";
             console.log(
                 pos.x > 0
-                    ? setLastActioned("Swiped Right")
-                    : setLastActioned("Swiped Left")
+                    ? setLastActioned("Liked")
+                    : setLastActioned("Disliked")
             );
             setPos({ x: pos.x > 0 ? 700 : -700, y: pos.y });
             setTimeout(() => {
@@ -62,7 +62,7 @@ const App = () => {
                 setPos({ x: 0, y: 0 });
             }, 300);
         } else if (pos.y < -SWIPE_Y) {
-            setLastActioned("Swiped Up");
+            setLastActioned("Added to cart");
             setPos({ x: 0, y: -900 });
             setTimeout(() => {
                 setTopIndex((prev) => Math.min(prev + 1, data.length - 1));
@@ -109,7 +109,7 @@ const App = () => {
                 );
             })}
 
-            <div className="absolute bottom-0 z-20 text-black text-2xl">
+            <div className="absolute bottom-10 z-20 text-green-400 text-4xl font-extrabold drop-shadow-2xl">
                 {lastActioned}
             </div>
         </div>

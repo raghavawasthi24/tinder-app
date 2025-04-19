@@ -1,5 +1,7 @@
+import { formatText } from "../helper/formatText";
+
 interface CardProps {
-    data: string;
+    data: any;
     topIndex: number;
     isTop: boolean;
     isSecond: boolean;
@@ -9,7 +11,7 @@ interface CardProps {
     setStartX: (startX: number) => void;
     setStartY: (startY: number) => void;
     index: number;
-    ref: any
+    ref: any;
 }
 
 export const Card = ({
@@ -23,7 +25,7 @@ export const Card = ({
     setStartX,
     setStartY,
     index,
-    ref
+    ref,
 }: CardProps) => {
     // Mouse events
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -45,7 +47,7 @@ export const Card = ({
         <div
             key={topIndex + index}
             ref={ref}
-            className={`w-full h-[90%] rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${
+            className={`w-full h-[98%] rounded-2xl shadow-lg absolute bg-white flex flex-col justify-between text-black ${
                 isTop
                     ? "z-20 transform-transition"
                     : isSecond
@@ -58,16 +60,33 @@ export const Card = ({
                           -pos.x / 20
                       }deg)`
                     : undefined,
-                transition:
-                    isDragging ? "transform 0s ease" : "transform 0.3s ease",
-                backgroundColor: `hsl(${(topIndex + index) * 60}, 70%, 60%)`,
+                transition: isDragging
+                    ? "transform 0s ease"
+                    : "transform 0.3s ease",
                 cursor: isTop ? "grab" : "default",
             }}
             onMouseDown={isTop ? handleMouseDown : undefined}
             onTouchStart={isTop ? handleTouchStart : undefined}
             onDragStart={(e) => e.preventDefault()}
         >
-            {data}
+            <img
+                src={data.imageUrl}
+                alt=""
+                className="w-full h-[88%] object-cover"
+            />
+
+            <div className="p-2">
+                <p className="text-lg">{formatText(data.name)}</p>
+                <p className="text-sm">{formatText(data.brand)}</p>
+
+                <div className="flex gap-2 items-center">
+                    <span className="font-semibold">{data.price}</span>
+                    <span className="line-through text-sm">
+                        {data.originalPrice}
+                    </span>
+                    <span className="text-sm text-green-700">{`${data.discountPercentage}%`}</span>
+                </div>
+            </div>
         </div>
     );
 };
