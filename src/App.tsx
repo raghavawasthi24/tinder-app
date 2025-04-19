@@ -12,8 +12,10 @@ const App = () => {
     const [lastActioned, setLastActioned] = useState<any>("");
     const [id, setId] = useState<any>(null);
 
-    const SWIPE_X = 150;
-    const SWIPE_Y = 200;
+    const cardRef = React.useRef<any>(null);    
+
+    const SWIPE_X = 200;
+    const SWIPE_Y = 400;
 
     // Mouse events
 
@@ -48,6 +50,7 @@ const App = () => {
         clearTimeout(id);
 
         if (pos.x > SWIPE_X || pos.x < -SWIPE_X) {
+            cardRef.current.style.transition = "transform 0.8s ease";
             console.log(
                 pos.x > 0
                     ? setLastActioned("Swiped Right")
@@ -96,10 +99,12 @@ const App = () => {
                         isTop={isTop}
                         isSecond={isSecond}
                         pos={pos}
+                        isDragging={isDragging}
                         setIsDragging={setIsDragging}
                         setStartX={setStartX}
                         setStartY={setStartY}
                         index={i}
+                        ref={ cardRef}
                     />
                 );
             })}

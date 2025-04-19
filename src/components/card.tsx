@@ -4,10 +4,12 @@ interface CardProps {
     isTop: boolean;
     isSecond: boolean;
     pos: { x: number; y: number };
+    isDragging: boolean;
     setIsDragging: (isDragging: boolean) => void;
     setStartX: (startX: number) => void;
     setStartY: (startY: number) => void;
     index: number;
+    ref: any
 }
 
 export const Card = ({
@@ -16,10 +18,12 @@ export const Card = ({
     isTop,
     isSecond,
     pos,
+    isDragging,
     setIsDragging,
     setStartX,
     setStartY,
     index,
+    ref
 }: CardProps) => {
     // Mouse events
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -40,6 +44,7 @@ export const Card = ({
     return (
         <div
             key={topIndex + index}
+            ref={ref}
             className={`w-full h-[90%] rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${
                 isTop
                     ? "z-20 transform-transition"
@@ -49,12 +54,12 @@ export const Card = ({
             }`}
             style={{
                 transform: isTop
-                    ? `translateX(${pos.x}px) translateY(${pos.y}px) rotate(${-
-                          pos.x / 20
+                    ? `translateX(${pos.x}px) translateY(${pos.y}px) rotate(${
+                          -pos.x / 20
                       }deg)`
                     : undefined,
                 transition:
-                  "transform 0.5s ease",
+                    isDragging ? "transform 0s ease" : "transform 0.3s ease",
                 backgroundColor: `hsl(${(topIndex + index) * 60}, 70%, 60%)`,
                 cursor: isTop ? "grab" : "default",
             }}
