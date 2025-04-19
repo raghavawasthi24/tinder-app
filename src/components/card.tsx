@@ -40,13 +40,12 @@ export const Card = ({
     return (
         <div
             key={topIndex + index}
-            className={`w-full h-[90%] rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${
-                isTop
-                    ? "z-20 transition-transform ease-in-out"
+            className={`w-full h-[90%] rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${isTop
+                    ? "z-20"
                     : isSecond
-                    ? "z-15 translate-y-2"
-                    : "opacity-0"
-            }`}
+                        ? "z-15 translate-y-2"
+                        : "opacity-0"
+                }`}
             style={{
                 transform: isTop
                     ? `translateX(${pos.x}px) translateY(${pos.y}px)`
@@ -56,7 +55,7 @@ export const Card = ({
             }}
             onMouseDown={isTop ? handleMouseDown : undefined}
             onTouchStart={isTop ? handleTouchStart : undefined}
-            onDragStart={(e) => e.preventDefault()} // prevent image ghost drag
+            onDragStart={(e) => e.preventDefault()}
         >
             {data}
         </div>
