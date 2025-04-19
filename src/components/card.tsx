@@ -40,16 +40,21 @@ export const Card = ({
     return (
         <div
             key={topIndex + index}
-            className={`w-full h-[90%] rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${isTop
-                    ? "z-20"
+            className={`w-full h-[90%] rounded-2xl shadow-lg absolute bg-white flex items-center justify-center text-xl font-bold ${
+                isTop
+                    ? "z-20 transform-transition"
                     : isSecond
-                        ? "z-15 translate-y-2"
-                        : "opacity-0"
-                }`}
+                    ? "z-15 translate-y-2"
+                    : "opacity-0"
+            }`}
             style={{
                 transform: isTop
-                    ? `translateX(${pos.x}px) translateY(${pos.y}px)`
+                    ? `translateX(${pos.x}px) translateY(${pos.y}px) rotate(${-
+                          pos.x / 20
+                      }deg)`
                     : undefined,
+                transition:
+                  "transform 0.5s ease",
                 backgroundColor: `hsl(${(topIndex + index) * 60}, 70%, 60%)`,
                 cursor: isTop ? "grab" : "default",
             }}

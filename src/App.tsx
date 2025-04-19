@@ -53,14 +53,14 @@ const App = () => {
                     ? setLastActioned("Swiped Right")
                     : setLastActioned("Swiped Left")
             );
-            setPos({ x: pos.x > 0 ? 500 : -500, y: pos.y });
+            setPos({ x: pos.x > 0 ? 700 : -700, y: pos.y });
             setTimeout(() => {
                 setTopIndex((prev) => Math.min(prev + 1, data.length - 1));
                 setPos({ x: 0, y: 0 });
             }, 300);
         } else if (pos.y < -SWIPE_Y) {
             setLastActioned("Swiped Up");
-            setPos({ x: 0, y: -700 });
+            setPos({ x: 0, y: -900 });
             setTimeout(() => {
                 setTopIndex((prev) => Math.min(prev + 1, data.length - 1));
                 setPos({ x: 0, y: 0 });
