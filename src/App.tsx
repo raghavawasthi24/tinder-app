@@ -3,6 +3,7 @@ import "./App.css";
 import { data } from "./constants/data";
 import { Card } from "./components/card";
 import { DataInterface } from "./interfaces/data";
+import { Refresh } from "./components/refresh";
 
 const App: React.FC = () => {
     const [topIndex, setTopIndex] = useState<number>(0);
@@ -52,7 +53,7 @@ const App: React.FC = () => {
             setPos({ x: pos.x > 0 ? 700 : -700, y: pos.y });
 
             setTimeout(() => {
-                setTopIndex((prev) => Math.min(prev + 1, data.length - 1));
+                setTopIndex((prev) => prev + 1);
                 setPos({ x: 0, y: 0 });
                 setTransitioning(false);
             }, 300);
@@ -62,7 +63,7 @@ const App: React.FC = () => {
             setPos({ x: 0, y: -900 });
 
             setTimeout(() => {
-                setTopIndex((prev) => Math.min(prev + 1, data.length - 1));
+                setTopIndex((prev) => prev + 1);
                 setPos({ x: 0, y: 0 });
                 setTransitioning(false);
             }, 300);
@@ -70,6 +71,8 @@ const App: React.FC = () => {
             setPos({ x: 0, y: 0 });
         }
     };
+
+    console.log(topIndex, data.length);
 
     return (
         <div
@@ -80,27 +83,31 @@ const App: React.FC = () => {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
         >
-            {data.slice(topIndex).map((card: DataInterface, i: number) => {
-                const isTop = i === 0;
-                const isSecond = i === 1;
-                return (
-                    <Card
-                        key={card.id || i}
-                        data={card}
-                        topIndex={topIndex}
-                        isTop={isTop}
-                        isSecond={isSecond}
-                        pos={pos}
-                        isDragging={isDragging}
-                        setIsDragging={setIsDragging}
-                        setStartX={setStartX}
-                        setStartY={setStartY}
-                        index={i}
-                        ref={isTop ? cardRef : null}
-                        transitioning={transitioning}
-                    />
-                );
-            })}
+            {topIndex != data.length ? (
+                data.slice(topIndex).map((card: DataInterface, i: number) => {
+                    const isTop = i === 0;
+                    const isSecond = i === 1;
+                    return (
+                        <Card
+                            key={card.id || i}
+                            data={card}
+                            topIndex={topIndex}
+                            isTop={isTop}
+                            isSecond={isSecond}
+                            pos={pos}
+                            isDragging={isDragging}
+                            setIsDragging={setIsDragging}
+                            setStartX={setStartX}
+                            setStartY={setStartY}
+                            index={i}
+                            ref={isTop ? cardRef : null}
+                            transitioning={transitioning}
+                        />
+                    );
+                })
+            ) : (
+                <Refresh />
+            )}
         </div>
     );
 };

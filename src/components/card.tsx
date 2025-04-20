@@ -99,25 +99,25 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
                     <div className="font-extrabold text-6xl">
                         {(() => {
                             if (isTop) {
-                                // if card is swiped up
-                                if (pos.y < -10) {
-                                    return (
-                                        <p className="absolute bottom-25 inset-x-0 text-center text-rose-400">
-                                            Add to cart
-                                        </p>
-                                    );
-                                    //else if card is swiped left
-                                } else if (pos.x < -10) {
+                                // if card is swiped left
+                                if (pos.x < -10) {
                                     return (
                                         <p className="absolute top-5 right-5 text-red-700">
                                             Dislike
                                         </p>
                                     );
-                                    //else if card is swiped right
+                                //else if card is swiped right
                                 } else if (pos.x > 10) {
                                     return (
                                         <p className="absolute top-5 left-5 text-green-700">
                                             Like
+                                        </p>
+                                    );
+                                //else if card is swiped up
+                                } else if (pos.y < -10) {
+                                    return (
+                                        <p className="absolute bottom-25 inset-x-0 text-center text-rose-400">
+                                            Add to cart
                                         </p>
                                     );
                                 }
