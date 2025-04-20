@@ -12,6 +12,7 @@ interface CardProps {
     setStartY: (startY: number) => void;
     index: number;
     ref: any;
+    transitioning: boolean;
 }
 
 export const Card = ({
@@ -26,6 +27,7 @@ export const Card = ({
     setStartY,
     index,
     ref,
+    transitioning,
 }: CardProps) => {
     // Mouse events
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -47,22 +49,22 @@ export const Card = ({
         <div
             key={topIndex + index}
             ref={ref}
-            className={`w-full h-[98%] rounded-2xl shadow-lg absolute bg-white flex flex-col justify-between text-black ${
-                isTop
-                    ? "z-20 transform-transition"
-                    : isSecond
-                    ? "z-15 translate-y-2"
-                    : "opacity-0"
+            className={`w-full h-[90%] rounded-2xl overflow-hidden shadow-lg absolute bg-white flex flex-col justify-between text-black ${
+                isTop ? "z-20" : isSecond ? "z-15" : "opacity-0"
             }`}
             style={{
                 transform: isTop
                     ? `translateX(${pos.x}px) translateY(${pos.y}px) rotate(${
                           -pos.x / 20
                       }deg)`
-                    : undefined,
-                transition: isDragging
-                    ? "transform 0s ease"
-                    : "transform 0.3s ease",
+                    : isSecond
+                    ? `translateY(${transitioning ? "0px" : "6px"})`
+                    : "translateY(6px)",
+                transition: isTop
+                    ? isDragging
+                        ? "transform 0s ease"
+                        : "transform 0.5s ease"
+                    : "transform 0.5s ease",
                 cursor: isTop ? "grab" : "default",
             }}
             onMouseDown={isTop ? handleMouseDown : undefined}
@@ -80,9 +82,9 @@ export const Card = ({
                 <p className="text-sm">{formatText(data.brand)}</p>
 
                 <div className="flex gap-2 items-center">
-                    <span className="font-semibold">{data.price}</span>
+                    <span className="font-semibold">₹{data.price}</span>
                     <span className="line-through text-sm">
-                        {data.originalPrice}
+                        ₹{data.originalPrice}
                     </span>
                     <span className="text-sm text-green-700">{`${data.discountPercentage}%`}</span>
                 </div>
