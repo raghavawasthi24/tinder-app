@@ -72,8 +72,6 @@ const App: React.FC = () => {
         }
     };
 
-    console.log(topIndex, data.length);
-
     return (
         <div
             className="w-full h-screen flex justify-center overflow-hidden relative"
@@ -83,8 +81,9 @@ const App: React.FC = () => {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
         >
+            {/* if stock is still there */}
             {topIndex != data.length ? (
-                data.slice(topIndex).map((card: DataInterface, i: number) => {
+                data.slice(topIndex, topIndex+2).map((card: DataInterface, i: number) => {
                     const isTop = i === 0;
                     const isSecond = i === 1;
                     return (
@@ -106,6 +105,7 @@ const App: React.FC = () => {
                     );
                 })
             ) : (
+                    // else show refresh button if no product remains
                 <Refresh />
             )}
         </div>

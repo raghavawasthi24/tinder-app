@@ -1,22 +1,8 @@
 import React, { forwardRef } from "react";
 import { formatText } from "../helper/formatText";
-import { DataInterface } from "../interfaces/data";
+import { CardInterface } from "../interfaces/card";
 
-interface CardProps {
-    data: DataInterface;
-    topIndex: number;
-    isTop: boolean;
-    isSecond: boolean;
-    pos: { x: number; y: number };
-    isDragging: boolean;
-    setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
-    setStartX: React.Dispatch<React.SetStateAction<number>>;
-    setStartY: React.Dispatch<React.SetStateAction<number>>;
-    index: number;
-    transitioning: boolean;
-}
-
-export const Card = forwardRef<HTMLDivElement, CardProps>(
+export const Card = forwardRef<HTMLDivElement, CardInterface>(
     (
         {
             data,
