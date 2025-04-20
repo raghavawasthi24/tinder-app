@@ -118,9 +118,9 @@ const App = () => {
                     );
                 })}
 
-                {/* <div className="absolute bottom-10 z-20 text-green-400 text-4xl font-extrabold drop-shadow-2xl">
+                <div className="absolute bottom-10 z-20 text-green-400 text-4xl font-extrabold drop-shadow-2xl">
                     {lastActioned}
-                </div> */}
+                </div>
             </div>
         </div>
     );
